@@ -6,6 +6,20 @@ const MOJANG_API = '/api/mojang/users/profiles/minecraft';
 const ELITE_API = '/api/elite';
 
 /**
+ * Convert an undashed UUID string to dashed format (8-4-4-4-12).
+ * Accepts already-dashed UUIDs safely.
+ * @param {string} uuid
+ * @returns {string}
+ */
+function dashUuid(uuid) {
+  const hex = uuid.replace(/-/g, '');
+  if (hex.length !== 32) {
+    throw new Error(`Invalid UUID: "${uuid}"`);
+  }
+  return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`;
+}
+
+/**
  * Resolve a Minecraft username to a UUID using the Mojang API.
  * @param {string} username
  * @returns {Promise<{id: string, name: string}>}
@@ -49,7 +63,7 @@ export async function getAccount(playerUuid) {
  */
 export async function getFarmingWeight(playerUuid, profileUuid) {
   const res = await fetch(
-    `${ELITE_API}/weight/${encodeURIComponent(playerUuid)}/${encodeURIComponent(profileUuid)}`
+    `${ELITE_API}/weight/${encodeURIComponent(dashUuid(playerUuid))}/${encodeURIComponent(dashUuid(profileUuid))}`
   );
   if (!res.ok) {
     // Weight endpoint may 404 for new profiles — treat as empty
@@ -67,7 +81,7 @@ export async function getFarmingWeight(playerUuid, profileUuid) {
  */
 export async function getCrops(playerUuid, profileUuid) {
   const res = await fetch(
-    `${ELITE_API}/crops/${encodeURIComponent(playerUuid)}/${encodeURIComponent(profileUuid)}`
+    `${ELITE_API}/crops/${encodeURIComponent(dashUuid(playerUuid))}/${encodeURIComponent(dashUuid(profileUuid))}`
   );
   if (!res.ok) {
     if (res.status === 404) return null;
