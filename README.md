@@ -39,6 +39,17 @@ Static site — open `index.html` directly in a browser or deploy to GitHub Page
 2. Set the source to the `main` branch, root folder.
 3. Save — GitHub will publish the site at `https://<your-username>.github.io/<repo-name>/`.
 
+### Option 3 — Docker
+```bash
+# Build and run with Docker Compose (recommended)
+docker compose up -d
+
+# Or build and run manually
+docker build -t skyblock-farming-tracker .
+docker run -d -p 8080:80 skyblock-farming-tracker
+```
+Then open **http://localhost:8080** in your browser.
+
 ---
 
 ## 📡 API Credits
@@ -62,6 +73,9 @@ js/
   api.js            — API service layer (Mojang + Elite Skyblock API)
   session.js        — Session tracking with localStorage
   utils.js          — Helper functions (number/time formatting, milestones)
+Dockerfile          — Docker image definition (nginx)
+docker-compose.yml  — Docker Compose service definition
+.dockerignore       — Files excluded from the Docker build context
 README.md
 LICENSE
 ```
