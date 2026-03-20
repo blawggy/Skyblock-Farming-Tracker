@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🍈 Melon Farming Tracker — Hypixel SkyBlock</title>
+  <meta name="description" content="Track your Melon crop farming stats, weight, milestones, and session history for Hypixel SkyBlock." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+  <!-- ── Header ── -->
+  <header>
+    <div class="container">
+      <div class="header-inner">
+        <span class="logo-emoji">🍈</span>
+        <div>
+          <div class="site-title">Melon Farming Tracker</div>
+          <div class="site-subtitle">Hypixel SkyBlock · Powered by Elite Skyblock API</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <!-- ── Search ── -->
+    <section class="search-section" aria-label="Player search">
+      <div class="search-card">
+        <h2>🔍 Look Up a Player</h2>
+        <form id="search-form" autocomplete="off">
+          <div class="search-row">
+            <input
+              id="username-input"
+              class="search-input"
+              type="text"
+              placeholder="Enter Minecraft username…"
+              aria-label="Minecraft username"
+              required
+              minlength="1"
+              maxlength="16"
+            />
+            <button id="search-btn" class="btn btn-primary" type="submit">
+              Search
+            </button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- ── Loading spinner ── -->
+    <div id="loading-spinner" class="hidden" role="status" aria-live="polite">
+      <div class="spinner"></div>
+      <span>Loading…</span>
+    </div>
+
+    <!-- ── Error banner ── -->
+    <div id="error-banner" class="hidden" role="alert">
+      <span class="error-icon">⚠️</span>
+      <span id="error-text"></span>
+      <button id="error-close" aria-label="Dismiss error">✕</button>
+    </div>
+
+    <!-- ── Player card + profile list ── -->
+    <section id="player-card" class="hidden" aria-label="Player info">
+      <div class="player-info">
+        <img id="player-avatar" src="" alt="Player avatar" width="72" height="72" />
+        <div class="player-meta">
+          <h2 id="player-name">—</h2>
+          <p>Hypixel SkyBlock player</p>
+        </div>
+      </div>
+      <div class="profile-selection">
+        <h3>Select a SkyBlock profile:</h3>
+        <div id="profile-list" role="list" aria-label="SkyBlock profiles"></div>
+      </div>
+    </section>
+
+    <!-- ── Dashboard ── -->
+    <section id="dashboard" class="hidden" aria-label="Farming dashboard">
+      <div class="dashboard-header">
+        <h2>🍈 Melon Farming Dashboard</h2>
+        <button id="refresh-btn" class="btn btn-ghost btn-sm">↻ Refresh</button>
+      </div>
+
+      <!-- Stat cards -->
+      <div class="stat-grid" aria-label="Farming statistics">
+        <div class="stat-card">
+          <span class="stat-icon">🍈</span>
+          <div class="stat-label">Melon Collection</div>
+          <div class="stat-value" id="stat-melon-collection">—</div>
+        </div>
+        <div class="stat-card">
+          <span class="stat-icon">🌾</span>
+          <div class="stat-label">Farming Level</div>
+          <div class="stat-value" id="stat-farming-level">—</div>
+        </div>
+        <div class="stat-card">
+          <span class="stat-icon">✨</span>
+          <div class="stat-label">Farming XP</div>
+          <div class="stat-value" id="stat-farming-xp">—</div>
+        </div>
+        <div class="stat-card">
+          <span class="stat-icon">⚖️</span>
+          <div class="stat-label">Total Farming Weight</div>
+          <div class="stat-value" id="stat-farming-weight">—</div>
+        </div>
+        <div class="stat-card">
+          <span class="stat-icon">🏋️</span>
+          <div class="stat-label">Melon Weight</div>
+          <div class="stat-value" id="stat-melon-weight">—</div>
+        </div>
+      </div>
+
+      <!-- Milestone progress -->
+      <div class="milestone-section" aria-label="Melon milestones">
+        <h3>🎯 Melon Milestone Progress</h3>
+        <div class="progress-bar-wrap" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Milestone progress">
+          <div class="progress-bar" id="milestone-bar" style="width:0%"></div>
+        </div>
+        <div class="milestone-meta">
+          <span class="milestone-tier-label" id="milestone-label">—</span>
+          <span id="milestone-next">—</span>
+        </div>
+
+        <div id="all-milestones" aria-label="All milestone tiers"></div>
+      </div>
+    </section>
+
+    <!-- ── Session Tracker ── -->
+    <section id="session-section" class="hidden" aria-label="Session tracker">
+      <h2>⏱ Session Tracker</h2>
+
+      <div class="session-controls">
+        <button id="start-session-btn" class="btn btn-primary">▶ Start Session</button>
+        <button id="stop-session-btn" class="btn btn-danger" disabled>⏹ Stop Session</button>
+      </div>
+
+      <p class="session-status" id="session-status">No active session.</p>
+      <div id="session-timer"></div>
+
+      <!-- Session history -->
+      <div class="session-history-header">
+        <h3>Session History</h3>
+        <button id="clear-sessions-btn" class="btn btn-ghost btn-sm">🗑 Clear All</button>
+      </div>
+
+      <div class="table-wrap">
+        <table class="session-table" aria-label="Past sessions">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Profile</th>
+              <th>Duration</th>
+              <th>Melons Farmed</th>
+              <th>Rate</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="session-history-body">
+            <tr id="no-sessions-row">
+              <td colspan="6">No sessions recorded yet.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ── Footer ── -->
+  <footer>
+    <div class="container">
+      <p>
+        Data provided by
+        <a href="https://api.eliteskyblock.com/" target="_blank" rel="noopener">Elite Skyblock API</a>
+        &amp; Mojang API · Not affiliated with Hypixel or Mojang ·
+        <a href="LICENSE" target="_blank">GPL-3.0</a>
+      </p>
+    </div>
+  </footer>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
