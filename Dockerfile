@@ -4,6 +4,9 @@ FROM nginx:alpine
 # Remove default nginx static assets
 RUN rm -rf /usr/share/nginx/html/*
 
+# Copy nginx configuration
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
 # Copy app files into the nginx web root
 COPY index.html /usr/share/nginx/html/
 COPY css/       /usr/share/nginx/html/css/

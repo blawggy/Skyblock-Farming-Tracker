@@ -2,7 +2,7 @@
  * API service layer — Mojang + Elite Skyblock API
  */
 
-const MOJANG_API = 'https://api.mojang.com/users/profiles/minecraft';
+const MOJANG_API = '/api/mojang/users/profiles/minecraft';
 const ELITE_API = 'https://api.eliteskyblock.com';
 
 /**
