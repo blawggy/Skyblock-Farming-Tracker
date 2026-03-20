@@ -3,7 +3,7 @@
  */
 
 const MOJANG_API = '/api/mojang/users/profiles/minecraft';
-const ELITE_API = 'https://api.eliteskyblock.com';
+const ELITE_API = '/api/elite';
 
 /**
  * Resolve a Minecraft username to a UUID using the Mojang API.
